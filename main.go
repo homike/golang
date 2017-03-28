@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	httptest.RunRedis()
+	httptest.RunHTTPServer()
 	fmt.Printf("hello!!!")
 }
