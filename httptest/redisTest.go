@@ -2,6 +2,7 @@ package httptest
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -103,4 +104,44 @@ func RunRedis() {
 		fmt.Printf("%+v\n", p2)
 	}
 
+}
+
+func InputData(i int) {
+	c := RedisPool.Get()
+	defer c.Close()
+
+	name := fmt.Sprintf("czx%v", i)
+	//fmt.Println(name)
+	if _, err := c.Do("ZADD", "zsettest", i, name); err != nil {
+		fmt.Println(err)
+		return
+	}
+}
+
+func GenData() {
+	for i := 0; i < 100000; i++ {
+		InputData(i)
+	}
+}
+
+func TestRedis() {
+	c := RedisPool.Get()
+	defer c.Close()
+
+	tBegin := time.Now().Unix()
+	rankList, err := redis.Values(c.Do("ZREVRANGEBYSCORE", "zsettest", 50000, "-inf", "WITHSCORES", "LIMIT", 0, 10))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	var tempResult []struct {
+		Name  string
+		Score int
+	}
+
+	redis.ScanSlice(rankList, &tempResult)
+	tEnd := time.Now().Unix()
+
+	fmt.Println(tEnd - tBegin)
 }
