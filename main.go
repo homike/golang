@@ -1,11 +1,7 @@
 package main
 
-import (
-	"GoTest/httptest"
-	"fmt"
-)
+import "GoTest/channelTest"
 
 func main() {
-	httptest.RunRedis()
-	fmt.Printf("hello!!!")
+	channeltest.RunChan3()
 }
