@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"runtime/pprof"
+	"runtime/trace"
 	"sync"
 )
 
@@ -83,6 +84,8 @@ func merge(cs ...<-chan int) <-chan int {
 }
 
 func RunChan2() {
+	trace.Start(os.Stderr)
+
 	in := gen(2, 3)
 
 	// Distribute the sq work across two goroutines that both read from in.
@@ -90,25 +93,11 @@ func RunChan2() {
 	c2 := count(in)
 
 	//Consume the merged output from c1 and c2.
-	// for n := range merge(c1, c2) {
-	// 	fmt.Println(n) // 4 then 9, or 9 then 4
-	// }
-
-	out := merge(c1, c2)
-	fmt.Println(<-out)
-
-	print := 2
-	for {
-		if print > 0 {
-			p := pprof.Lookup("goroutine")
-			p.WriteTo(os.Stdout, 1)
-
-			fmt.Println("----------------------------")
-			print--
-		}
-
+	for n := range merge(c1, c2) {
+		fmt.Println(n) // 4 then 9, or 9 then 4
 	}
 
+	trace.Stop()
 	return
 }
 

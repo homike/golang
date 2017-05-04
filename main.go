@@ -1,7 +1,16 @@
 package main
 
-import "GoTest/httptest"
+import (
+	"GoTest/interfacetest"
+)
 
 func main() {
-	httptest.TestRedis()
+	robot := &interfacetest.MRobot{}
+	interfacetest.FanInRobot(robot)
+
+	for {
+
+	}
+
+	//interfacetest.Run()
 }
