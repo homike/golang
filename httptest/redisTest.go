@@ -2,7 +2,6 @@ package httptest
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -103,54 +102,5 @@ func RunRedis() {
 
 		fmt.Printf("%+v\n", p2)
 	}
-
-}
-
-func InputData(i int) {
-	c := RedisPool.Get()
-	defer c.Close()
-
-	name := fmt.Sprintf("czx%v", i)
-	//fmt.Println(name)
-	if _, err := c.Do("ZADD", "zsettest", i, name); err != nil {
-		fmt.Println(err)
-		return
-	}
-}
-
-func GenData() {
-	for i := 0; i < 100000; i++ {
-		InputData(i)
-	}
-}
-
-func TestRedis() {
-	c := RedisPool.Get()
-	defer c.Close()
-
-	var countSec int64 = 0
-	for i := 0; i < 1000; i++ {
-		tBegin := time.Now().UnixNano()
-
-		// rankList, err := redis.Values(c.Do("ZREVRANGEBYSCORE", "zsettest", 10, "-inf", "WITHSCORES", "LIMIT", 0, 10))
-		// if err != nil {
-		// 	fmt.Println(err)
-		// 	return
-		// }
-		// _ = rankList
-
-		rankList, err := redis.Values(c.Do("ZRANGE", "zsettest", 10, 20, "WITHSCORES"))
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		_ = rankList
-
-		tEnd := time.Now().UnixNano()
-
-		countSec = countSec + (tEnd - tBegin)
-	}
-
-	fmt.Println("1000 : % us", countSec/1000)
 
 }

@@ -15,9 +15,9 @@ type U struct {
 //Post
 func HttpPost(json string) *http.Response {
 
-	body := ioutil.NopCloser(strings.NewReader(json)) //把form数据编下码
+	body := ioutil.NopCloser(strings.NewReader(json))
 	client := &http.Client{}
-	req, _ := http.NewRequest("POST", "http://http://127.0.0.1:8680", body)
+	req, _ := http.NewRequest("POST", "http://http://127.0.0.1:8680/x/3/idip", body)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := client.Do(req) //发送

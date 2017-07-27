@@ -1,16 +1,9 @@
 package main
 
-import (
-	"GoTest/interfacetest"
-)
+import "GoTest/interfacetest"
 
+// Main
 func main() {
-	robot := &interfacetest.MRobot{}
-	interfacetest.FanInRobot(robot)
-
-	for {
-
-	}
-
-	//interfacetest.Run()
+	interfacetest.RunInterface()
+	//thirdparty.RunRandom()
 }

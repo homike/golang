@@ -1,54 +1,54 @@
 package interfacetest
 
+
 import (
 	"fmt"
 )
 
-type RobotFunc interface {
-	InitCase(sceneId int)
+type IParamer interface {
+	Do()
 }
 
-type Robot struct {
-	RobotIndex int
-	RobotFunc
+type testStruct int
+
+func (t *testStruct) Do() {
+	fmt.Println("Doing!!", (*t))
+	(*t)++
 }
 
-func FanInRobot(rFunc interface{}) chan *Robot {
-	value, ok := rFunc.(RobotFunc)
-	if !ok {
-		fmt.Println("convert error: %v", value)
-		return nil
-	}
-	fmt.Println("FanInRobot")
-
-	robots := make(chan *Robot, 2000)
-	for i := 0; i < 1; i++ {
-		//name := RobotName //fmt.Sprintf("robot%v", i)
-		go func() {
-			fmt.Println("FanInRobot 1")
-			robot := &Robot{
-				RobotIndex: i,
-				RobotFunc:  value,
-			}
-			value.InitCase(1)
-			robot.RobotFunc.InitCase(2)
-
-			robots <- robot
-		}()
-	}
-
-	return robots
+func CreateObj(i IParamer) {
+	var t testStruct
+	i = &t
 }
 
-//===============================================
-type MRobot struct {
-	Robot
-
-	Name string
+// interface 的传递也是值传递，但对interface所指变量的修改，是对原变量数据进行修改。
+func RunInterface() {
+	var i IParamer
+	CreateObj(i)
+	i.Do()
 }
 
-func (r *MRobot) InitCase(sceneID int) {
-	fmt.Println("InitCase", sceneID)
-	r.Name = fmt.Sprintf("robot%v", sceneID)
-	//fmt.Println(sceneID, r.Name)
-}
+//
+// type IParamer interface {
+// 	Do()
+// }
+
+// type testStruct int
+
+// func (t *testStruct) Do() {
+// 	fmt.Println("Doing!!", (*t))
+// 	(*t)++
+// }
+
+// func CreateObj(i IParamer) {
+// 	// var t testStruct
+// 	// (*i) = &t
+// 	i.Do()
+// }
+
+// func RunInterface() {
+// 	var t testStruct
+// 	var i IParamer = &t
+// 	CreateObj(i)
+// 	i.Do()
+// }
