@@ -2,6 +2,7 @@ package channeltest
 
 import (
 	"fmt"
+	MRand "math/rand"
 	"sync"
 	"time"
 )
@@ -25,7 +26,7 @@ func producer(count int) chan *TestR {
 		for n := 0; n < count; n++ {
 			test := &TestR{Value: n,
 				NextStepID:    0,
-				NextStartTime: time.Now().UnixNano()/1000000 + (int64)(maRand.New(maRand.NewSource(time.Now().UnixNano())).Intn(1000*2)),
+				NextStartTime: time.Now().UnixNano()/1000000 + (int64)(MRand.New(MRand.NewSource(time.Now().UnixNano())).Intn(1000*2)),
 				Step:          0,
 			}
 			out <- test
@@ -44,7 +45,7 @@ func consumer(robots chan *TestR) {
 			reqQueue <- struct{}{}
 			//fmt.Println("Enter")
 			go func() {
-				r.NextStartTime = nStartTime + (int64)(maRand.New(maRand.NewSource(time.Now().UnixNano())).Intn(1000*2))
+				r.NextStartTime = nStartTime + (int64)(MRand.New(MRand.NewSource(time.Now().UnixNano())).Intn(1000*2))
 
 				fmt.Println("exec ", r.Value, ":", r.Step)
 				r.Step = r.Step + 1
