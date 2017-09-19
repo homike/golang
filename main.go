@@ -1,11 +1,11 @@
 package main
 
-import "GoTest/channeltest"
+import "GoTest/bittest"
 
 // 测试提交
 // Main
 func main() {
-	channeltest.RunContext()
+	bittest.RunBit()
 	//interfacetest.RunInterface()
 	//thirdparty.RunRandom()
 }
