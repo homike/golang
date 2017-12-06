@@ -235,8 +235,8 @@ func RunChan4() {
 	done <- struct{}{}
 	done <- struct{}{}
 
-	p := pprof.Lookup("goroutine")
-	p.WriteTo(os.Stdout, 1)
+	//p := pprof.Lookup("goroutine")
+	//p.WriteTo(os.Stdout, 1)
 }
 
 //---------------------------------------------------------
