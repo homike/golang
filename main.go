@@ -1,14 +1,14 @@
 package main
 
-import (
-	"GoTest/channeltest"
-)
+import "GoTest/channeltest"
 
 // 测试提交
 // Main
 
 func main() {
-	channeltest.RunChan4()
+	//reflect.RunReflect1()
+	channeltest.ChanClose1()
+
 	//bittest.RunBit()
 	//interfacetest.RunInterface()
 	//thirdparty.RunRandom()
