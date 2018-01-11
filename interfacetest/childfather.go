@@ -1,4 +1,4 @@
-package basetest
+package interfacetest
 
 import "fmt"
 
