@@ -7,6 +7,10 @@ import (
 	"time"
 )
 
+////////////////////////////////////
+// 字符串拼接，效率测试
+///////////////////////////////////
+
 func benchmarkStringFunction(n int, index int) (d time.Duration) {
 	v := "ni shuo wo shi bu shi tai wu liao le a?"
 	var s string

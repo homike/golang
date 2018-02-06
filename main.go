@@ -10,7 +10,7 @@ import (
 
 func main() {
 	//reflect.RunReflect1()
-	basetest.Run3()
+	basetest.RunString()
 
 	//bittest.RunBit()
 	//interfacetest.RunInterface()
