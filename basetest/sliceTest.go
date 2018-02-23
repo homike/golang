@@ -15,6 +15,13 @@ func (m *myStruct) test1() {
 func (m myStruct) test2() {
 	m.value = 2
 }
+
+type sliceType []int
+
+func Delete(s *sliceType) {
+	*s = append((*s)[:0], (*s)[1:]...)
+}
+
 func Run2() {
 	testS := myStruct{
 		value: 0,
@@ -24,4 +31,12 @@ func Run2() {
 	fmt.Printf("*T %v\n", testS)
 	testS.test2()
 	fmt.Printf("T %v\n", testS)
+
+	slice1 := sliceType{1, 2, 3, 4}
+	Delete(&slice1)
+
+	for _, v := range slice1 {
+		fmt.Println("value ", v)
+	}
+	fmt.Print("end \n ")
 }

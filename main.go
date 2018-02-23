@@ -1,7 +1,8 @@
 package main
 
 import (
-	"GoTest/basetest"
+	"GoTest/astar"
+	_ "GoTest/basetest"
 	_ "GoTest/channeltest"
 )
 
@@ -9,10 +10,11 @@ import (
 // Main
 
 func main() {
-	//reflect.RunReflect1()
-	basetest.RunString()
+	astar.RunAstar()
+	// basetest.Run2()
 
-	//bittest.RunBit()
-	//interfacetest.RunInterface()
-	//thirdparty.RunRandom()
+	// reflect.RunReflect1()
+	// bittest.RunBit()
+	// interfacetest.RunInterface()
+	// thirdparty.RunRandom()
 }
