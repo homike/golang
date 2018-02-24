@@ -6,6 +6,8 @@ import (
 	"sort"
 )
 
+// A* 算法设置
+
 type RectType uint8
 
 const (
