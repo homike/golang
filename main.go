@@ -4,40 +4,79 @@ import (
 	_ "GoTest/astar"
 	_ "GoTest/basetest"
 	_ "GoTest/channeltest"
-	"fmt"
 
 	_ "gotest/bittest"
 	// _ "github.com/coreos/etcd/clientv3"
 	// _ "google.golang.org/grpc"
-
-	"gotest/memorymodel"
 )
 
 // 测试提交
 // Main
-
-func main() {
-
-	rewards := []int{1, 2, 3, 2}
-	probs := []int{100, 200, 300, 200}
-
-	//for i := len(rewards) - 1; i >= 0; i-- {
-	for i := 0; i < len(rewards); i++ {
-		if rewards[i] == 2 || rewards[i] == 3 {
-			rewards = append(rewards[:i], rewards[i+1:]...)
-			probs = append(probs[:i], probs[i+1:]...)
-			fmt.Printf("index: %v, len: %v \n", i, len(rewards))
+func match(input int) int {
+	arr := []int{1, 3, 5}
+	for _, v := range arr {
+		if v == input {
+			return v
 		}
 	}
-	fmt.Printf("rewads: %v, probs: %v \n", rewards, probs)
+	return 0
+}
 
-	// astar.RunAstar()
-	// basetest.Run2()
+func main() {
+	/*
+		ids := []int{1, 2, 3, 4}
+		weights := []int{0, 0, 0}
 
-	// reflect.RunReflect1()
-	// bittest.RunBit()
-	// interfacetest.RunInterface()
-	// thirdparty.RunRandom()
+		times := []int{0, 0, 0}
+		for i := 0; i < 10000; i++ {
+			randomID := random.GetRandomWeightID(ids, weights)
+			//fmt.Printf("%v, ", randomID)
 
-	memorymodel.Run1()
+			for j := 0; j < len(ids); j++ {
+				if ids[j] == randomID {
+					times[j]++
+				}
+			}
+		}
+
+		fmt.Printf("times: $v \n", times)
+	*/
+
+	/*
+		testValue := 1
+		switch testValue {
+		case 1:
+			fmt.Println("1")
+		case 2:
+			fmt.Println("2")
+		case match(testValue):
+			fmt.Println("3")
+		}
+	*/
+
+	//	memorymodel.Run1()
+
+	//gorutineMap := make(map[int]string)
+	//for i := 0; i < 100; i++ {
+	//	gorutineMap[i] = fmt.Sprintf("gorutine%v", i)
+	//}
+
+	//var ws sync.WaitGroup
+	//r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	//for i := 0; i < 10000; i++ {
+	//	go func() {
+	//		ws.Add(1)
+	//		index := r.Intn(99)
+	//		for {
+	//			str := fmt.Sprintf("gorutine%v", index)
+	//			if str != gorutineMap[index] {
+	//				fmt.Println("data ", index, gorutineMap[index])
+	//			}
+	//		}
+	//	}()
+	//}
+	//ws.Wait()
+
+	//fmt.Println("End")
 }
