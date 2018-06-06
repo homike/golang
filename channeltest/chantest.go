@@ -4,13 +4,25 @@ import (
 	"fmt"
 	"os"
 	"runtime/pprof"
-	"runtime/trace"
 	"sync"
 )
 
-//---------------------------------------------------------
+// 在函数中创建一个channel 返回，同时创建一个gorutine 往 channel 中塞数据，
+// 这是一个重要的惯用法
 func gen(nums ...int) <-chan int {
 	out := make(chan int)
+	go func() {
+		for _, n := range nums {
+			out <- n
+		}
+		close(out)
+	}()
+	return out
+}
+
+// 加缓冲区，避免GoRutine阻塞，使发送者可以顺利退出
+func gen2(nums ...int) <-chan int {
+	out := make(chan int, len(nums))
 	go func() {
 		for _, n := range nums {
 			out <- n
@@ -31,32 +43,7 @@ func count(nums <-chan int) <-chan int {
 	return out
 }
 
-// 在函数中创建一个channel 返回，同时创建一个gorutine 往 channel 中塞数据， 这是一个重要的惯用法
-func RunChan1() {
-	out := gen(1, 2, 3)
-
-	for v := range out {
-		fmt.Println(v)
-	}
-}
-
-func RunChan11() {
-	//out1 := gen(1, 2, 3)
-	//out2 := count(out1)
-	// for v := range out2 {
-	// 	fmt.Println(v)
-	// }
-
-	// Set up the pipeline and consume the output.
-	for n := range count(count(gen(2, 3))) {
-		fmt.Println(n) // 16 then 81
-	}
-}
-
-//---------------------------------------------------------
-
-//Fan-out, Fan-in
-//---------------------------------------------------------
+//Fan-in: 将多个channel 合并为一个channel
 func merge(cs ...<-chan int) <-chan int {
 	var wg sync.WaitGroup
 	out := make(chan int)
@@ -83,40 +70,8 @@ func merge(cs ...<-chan int) <-chan int {
 	return out
 }
 
-func RunChan2() {
-	trace.Start(os.Stderr)
-
-	in := gen(2, 3)
-
-	// Distribute the sq work across two goroutines that both read from in.
-	c1 := count(in)
-	c2 := count(in)
-
-	//Consume the merged output from c1 and c2.
-	for n := range merge(c1, c2) {
-		fmt.Println(n) // 4 then 9, or 9 then 4
-	}
-
-	trace.Stop()
-	return
-}
-
-//---------------------------------------------------------
-
 // 加缓冲区，避免GoRutine阻塞，使发送者可以顺利退出
-//---------------------------------------------------------
-func gen3(nums ...int) <-chan int {
-	out := make(chan int, len(nums))
-	go func() {
-		for _, n := range nums {
-			out <- n
-		}
-		close(out)
-	}()
-	return out
-}
-
-func merge3(cs ...<-chan int) <-chan int {
+func merge2(cs ...<-chan int) <-chan int {
 	var wg sync.WaitGroup
 	out := make(chan int, 1)
 
@@ -142,30 +97,80 @@ func merge3(cs ...<-chan int) <-chan int {
 	return out
 }
 
-func RunChan3() {
-	in := gen3(2, 3)
+//---------------------------------------------------------
+//	gorutine1==>
+//				chan1
+//  gorutine2==>
+//---------------------------------------------------------
+func RunChan1() {
+	out := gen(1, 2, 3)
+	for v := range out {
+		fmt.Println(v)
+	}
+}
 
-	c1 := count(in)
-	c2 := count(in)
+func RunChan11() {
+	out1 := gen(1, 2, 3)
+	out2 := count(out1)
+
+	for v := range out2 {
+		fmt.Println(v)
+	}
+
+	p := pprof.Lookup("goroutine")
+	p.WriteTo(os.Stdout, 1)
+
+	// Set up the pipeline and consume the output.
+	//for n := range count(count(gen(2, 3))) {
+	//	fmt.Println(n) // 16 then 81
+	//}
+}
+
+//---------------------------------------------------------
+//gorutine1==>
+//			  chan1
+//gorutine1==>
+//				   ==>mergeChan
+//gorutine1==>
+//			  chan2
+//gorutine1==>
+//---------------------------------------------------------
+func RunChan2() {
 
 	// Distribute the sq work across two goroutines that both read from in.
-	out := merge3(c1, c2)
+	in := gen(2, 3)
+	c1 := count(in)
+	c2 := count(in)
+	//Consume the merged output from c1 and c2.
+	for n := range merge(c1, c2) {
+		fmt.Println(n) // 4 then 9, or 9 then 4
+	}
+
+	// Distribute the sq work across two goroutines that both read from in.
+	in2 := gen(2, 3)
+	c3 := count(in2)
+	c4 := count(in2)
+	out := merge2(c3, c4)
 	fmt.Println(<-out)
 
 	p := pprof.Lookup("goroutine")
 	p.WriteTo(os.Stdout, 1)
+
+	return
 }
 
 //---------------------------------------------------------
-
-// 明确退出
+// 明确退出: 通过信号控制多个gorutine的退出
 //---------------------------------------------------------
-func merge4(done <-chan struct{}, cs ...<-chan int) <-chan int {
+func merge3(done <-chan struct{}, cs ...<-chan int) <-chan int {
 	var wg sync.WaitGroup
 	out := make(chan int)
 
 	output := func(c <-chan int) {
-		defer wg.Done()
+		defer func() {
+			fmt.Println("merge3 gortuine exit")
+			wg.Done()
+		}()
 		for n := range c {
 			select {
 			case out <- n:
@@ -187,10 +192,13 @@ func merge4(done <-chan struct{}, cs ...<-chan int) <-chan int {
 	return out
 }
 
-func count4(done <-chan struct{}, nums <-chan int) <-chan int {
+func count2(done <-chan struct{}, nums <-chan int) <-chan int {
 	out := make(chan int)
 	go func() {
-		defer close(out)
+		defer func() {
+			fmt.Println("count2() gorutine exit")
+			close(out)
+		}()
 		for n := range nums {
 			select {
 			case out <- n * n:
@@ -202,41 +210,40 @@ func count4(done <-chan struct{}, nums <-chan int) <-chan int {
 	return out
 }
 
-func RunChan41() {
-	done := make(chan struct{})
-	defer close(done)
-
+func RunChan3() {
 	in := gen(2, 3)
 
-	// Distribute the sq work across two goroutines that both read from in.
-	c1 := count4(done, in)
-	c2 := count4(done, in)
-
-	out := merge4(done, c1, c2)
-	fmt.Println(<-out) // 4 or 9
-
-	p := pprof.Lookup("goroutine")
-	p.WriteTo(os.Stdout, 1)
-}
-
-func RunChan4() {
-	in := gen(2, 3)
-
-	// Distribute the sq work across two goroutines that both read from in.
 	c1 := count(in)
 	c2 := count(in)
 
 	// Consume the first value from output.
 	done := make(chan struct{}, 2)
-	out := merge4(done, c1, c2)
+	out := merge3(done, c1, c2)
 	fmt.Println(<-out) // 4 or 9
 
 	// Tell the remaining senders we're leaving.
 	done <- struct{}{}
-	done <- struct{}{}
 
-	//p := pprof.Lookup("goroutine")
-	//p.WriteTo(os.Stdout, 1)
+	p := pprof.Lookup("goroutine")
+	p.WriteTo(os.Stdout, 1)
 }
 
-//---------------------------------------------------------
+func RunChan31() {
+	done := make(chan struct{})
+	//defer close(done)
+
+	in := gen(2, 3)
+
+	// Distribute the sq work across two goroutines that both read from in.
+	c1 := count2(done, in)
+	c2 := count2(done, in)
+
+	out := merge3(done, c1, c2)
+	fmt.Println(<-out) // 4 or 9
+
+	//close(done)
+	//time.Sleep(1 * time.Second)
+
+	p := pprof.Lookup("goroutine")
+	p.WriteTo(os.Stdout, 1)
+}
