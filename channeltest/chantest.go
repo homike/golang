@@ -5,6 +5,7 @@ import (
 	"os"
 	"runtime/pprof"
 	"sync"
+	"time"
 )
 
 // 在函数中创建一个channel 返回，同时创建一个gorutine 往 channel 中塞数据，
@@ -182,6 +183,7 @@ func merge3(done <-chan struct{}, cs ...<-chan int) <-chan int {
 
 	wg.Add(len(cs))
 	for _, c := range cs {
+		fmt.Println("create gorutine")
 		go output(c)
 	}
 
@@ -242,7 +244,7 @@ func RunChan31() {
 	fmt.Println(<-out) // 4 or 9
 
 	//close(done)
-	//time.Sleep(1 * time.Second)
+	time.Sleep(1 * time.Second)
 
 	p := pprof.Lookup("goroutine")
 	p.WriteTo(os.Stdout, 1)
