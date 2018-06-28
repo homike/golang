@@ -12,7 +12,7 @@ import (
 
 // 当有多个消费者，多个生产者时，如何优雅的关闭go channel?
 // 添加一个额外Channel, 用于关闭
-func ChanClose1() {
+func ChannelClose() {
 	rand.Seed(time.Now().UnixNano())
 	log.SetFlags(0)
 

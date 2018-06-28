@@ -2,11 +2,11 @@ package interfacetest
 
 import "fmt"
 
-type Handler interface {
+type HandlerInterface interface {
 	Do(k, v interface{})
 }
 
-func Each(m map[interface{}]interface{}, h Handler) {
+func Each(m map[interface{}]interface{}, h HandlerInterface) {
 	if m != nil && len(m) > 0 {
 		for k, v := range m {
 			h.Do(k, v)

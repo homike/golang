@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+// context.Background(): 所有context的root, 不能被cancel
+// context.WithCancel(): 返回一个继承的Context, 这个Context在父Context的Done被关闭时关闭自己的Done通道，或者在自己被Cancel的时候关闭自己的Done。
+// 					 	 WithCancel同时还返回一个取消函数cancel，这个cancel用于取消当前的Context。
 func childFunc(cont context.Context, num *int) {
 	ctx, _ := context.WithCancel(cont)
 	for {

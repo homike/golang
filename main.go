@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/homike/gotest/channeltest"
 	// _ "github.com/coreos/etcd/clientv3"
 	// _ "google.golang.org/grpc"
+	"github.com/homike/gotest/interfacetest"
 )
 
 func main() {
-	channeltest.RunChan31()
+	interfacetest.RunPoly()
 }

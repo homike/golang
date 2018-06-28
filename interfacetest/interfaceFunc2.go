@@ -3,7 +3,7 @@ package interfacetest
 import "fmt"
 
 func EachFunc(m map[interface{}]interface{}, f func(k, v interface{})) {
-	Each(m, HandlerFunc(f))
+	Each(m, HandlerFunc1(f))
 }
 
 func selfInfo(k, v interface{}) {
