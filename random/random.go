@@ -1,6 +1,9 @@
 package random
 
-import "math/rand"
+import (
+	"fmt"
+	"math/rand"
+)
 
 func RandNum(base int, n int) int {
 	if n <= 0 {
@@ -30,4 +33,10 @@ func GetRandomWeightID(ids, weights []int) int {
 		}
 	}
 	return ids[0]
+}
+
+func RunRandom() {
+	for _, randIndex := range rand.Perm(10) {
+		fmt.Println("num", randIndex)
+	}
 }

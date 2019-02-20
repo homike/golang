@@ -30,6 +30,7 @@ func RunReflect1() {
 		fmt.Println(vf, vf.Type())
 
 		tf := vType.Field(i)
+		tf.Tag = `name:"czx11" color:"B"`
 		fmt.Println(tf.Name, tf.Tag.Get("name"))
 		fmt.Println("--------------")
 	}

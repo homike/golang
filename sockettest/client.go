@@ -23,7 +23,7 @@ func main() {
 		}
 		_, err = conn.Write([]byte(input))
 		if err != nil {
-			fmt.Println("write string error")
+			fmt.Println("write string error1, ", err)
 			return
 		}
 
@@ -31,8 +31,8 @@ func main() {
 		buf := make([]byte, 10)
 		_, err = conn.Read(buf)
 		if err != nil {
-			fmt.Println("read string error")
-			return
+			fmt.Println("read string error, ", err)
+			//return
 		}
 		fmt.Print("[server]", string(buf))
 	}

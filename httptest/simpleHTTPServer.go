@@ -1,8 +1,10 @@
 package httptest
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
+	"math"
 	"net/http"
 )
 
@@ -11,13 +13,23 @@ import (
 ///////////////////////////////////
 
 // 方法一: 使用默认mux
+
+type JsonStruct struct {
+	Date int64 `json:"date"`
+}
+
 func sayhelloName(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()       //解析参数，默认是不会解析的
 	fmt.Println(r.Form) //这些信息是输出到服务器端的打印信息
 	//fmt.Println("path", r.URL.Path)
 	//fmt.Println("scheme", r.URL.Scheme)
 
-	fmt.Fprintf(w, "Hello astaxie!") //这个写入到w的是输出到客户端的
+	j1 := JsonStruct{
+		Date: math.MaxInt64,
+	}
+	jm, _ := json.Marshal(j1)
+
+	fmt.Fprintf(w, string(jm)) //这个写入到w的是输出到客户端的
 }
 
 func RunHTTPServer1() {
