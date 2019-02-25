@@ -1,7 +1,9 @@
 package main
 
-import "github.com/homike/gotest/channeltest"
+import (
+	"github.com/homike/gotest/gobugs"
+)
 
 func main() {
-	channeltest.RunContext()
+	gobugs.RunBugs()
 }
