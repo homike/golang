@@ -27,7 +27,6 @@ func (lockTest *LockTest) StartTest() {
 }
 
 func (lockTest *LockTest) Reload() {
-
 	lockTest.lock.Lock()
 	defer lockTest.lock.Unlock()
 }
