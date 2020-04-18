@@ -12,7 +12,7 @@ func BenchmarkLoggerFile_LogrusAstone(b *testing.B) {
 
 	logger := logrus.New(logrus.WithFile("logrusastone.log"))
 	defer logger.Close()
-	entry := logger.GetEntry().SetPrefix("prefix")
+	entry := logger.GetEntry().SetPrefix(fmt.Sprintf("UID:%d|GID:%d|Command:%s", 10000, 1, "GET_USER_INFO"))
 
 	b.StartTimer()
 	b.RunParallel(func(p *testing.PB) {
@@ -22,7 +22,7 @@ func BenchmarkLoggerFile_LogrusAstone(b *testing.B) {
 	})
 }
 
-func BenchmarkLoggerFile_LogrusAstone_buff4096(b *testing.B) {
+func BenchmarkLoggerFile_LogrusAstone_buf4096(b *testing.B) {
 	logger := logrus.New(
 		logrus.WithFile("logrus_bufio_4096"),
 		logrus.WithColor(true),
