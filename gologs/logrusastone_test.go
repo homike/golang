@@ -11,7 +11,7 @@ import (
 func BenchmarkLogger_LogrusAstone_File(b *testing.B) {
 	b.StopTimer()
 
-	logger := logrus.New(logrus.WithFile("logrusastone.log"))
+	logger := logrus.New(logrus.WithFile("logrusastone"))
 	defer logger.Close()
 	entry := logger.GetEntry().SetPrefix(fmt.Sprintf("UID:%d|GID:%d|Command:%s", 10000, 1, "GET_USER_INFO"))
 
