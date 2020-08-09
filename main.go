@@ -3,20 +3,34 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	_ "net/http/pprof"
 	"runtime"
 	"time"
-
-	"github.com/homike/gotest/timertest"
 )
 
+const kItemTypeOffset = 100000
+
+func GetItemKey(itemType, itemID int32) int32 {
+	return itemType*kItemTypeOffset + itemID
+}
+
+func ParseItemKey(itemKey int32) (int32, int32) {
+	return itemKey / kItemTypeOffset, itemKey % kItemTypeOffset
+}
+
 func main() {
-	go timertest.RunTimerAfter()
+	key := GetItemKey(9991, 99991)
+	fmt.Println("key ", key)
 
-	test2()
+	id, num := ParseItemKey(key)
+	fmt.Println("id ", id, "num ", num)
+	//stack.PrintGoroutineMemConsume()
+	//channeltest.RunUnbounded()
+	//go timertest.RunTimerAfter()
 
-	http.ListenAndServe("0.0.0.0:8899", nil)
+	//test2()
+
+	//http.ListenAndServe("0.0.0.0:8899", nil)
 
 }
 
