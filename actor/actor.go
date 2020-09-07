@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"reflect"
+	"strings"
 	"time"
 )
 
@@ -34,6 +36,7 @@ type Client struct {
 	requestList chan *Call
 	SigClose    chan struct{}
 	shutdown    bool // user has called Close
+	m_CallMap   map[string]*CallFunc
 }
 
 func (client *Client) send(call *Call) {
@@ -97,10 +100,15 @@ loop:
 	time.Sleep(1 * time.Second)
 
 	fmt.Println("request len3: ", len(client.requestList))
-	for call := range client.requestList {
+	// 不能用for循环来关闭, 会阻塞等待
+	select {
+	case call := <-client.requestList:
 		call.Error = ErrShutdown
 		call.done()
+	default:
 	}
+	//for call := range client.requestList {
+	//}
 }
 
 func (client *Client) doSomething(index string) int {
@@ -115,9 +123,22 @@ func NewClient(uid int32) *Client {
 		requestList: make(chan *Call, 20),
 		SigClose:    make(chan struct{}),
 		shutdown:    false,
+		m_CallMap:   make(map[string]*CallFunc),
 	}
 	go client.input()
 	return client
+}
+
+type MsgHandle func(req interface{}) interface{}
+
+var handles map[int]MsgHandle
+
+func (client *Client) Register(cmd int, handle MsgHandle) {
+	handles[cmd] = handle
+}
+
+func (client *Client) Handle(cmd int, req interface{}) interface{} {
+	return handles[cmd](req)
 }
 
 func (client *Client) Close() error {
@@ -144,4 +165,61 @@ func (client *Client) Go(msgKey, msgBody string, reply interface{}) *Call {
 func (client *Client) Call(msgKey, msgBody string, reply interface{}) error {
 	call := <-client.Go(msgKey, msgBody, reply).Done
 	return call.Error
+}
+
+type CallFunc struct {
+	Func       interface{}
+	FuncType   reflect.Type
+	FuncVal    reflect.Value
+	FuncParams string
+}
+
+func (this *Client) FindCall(funcName string) *CallFunc {
+	funcName = strings.ToLower(funcName)
+	fun, exist := this.m_CallMap[funcName]
+	if exist == true {
+		return fun
+	}
+	return nil
+}
+
+func (this *Client) RegisterCall(funcName string, call interface{}) {
+	funcName = strings.ToLower(funcName)
+	if this.FindCall(funcName) != nil {
+		fmt.Println(fmt.Errorf("cannot find call"))
+	}
+
+	this.m_CallMap[funcName] = &CallFunc{Func: call, FuncVal: reflect.ValueOf(call), FuncType: reflect.TypeOf(call), FuncParams: reflect.TypeOf(call).String()}
+}
+
+func (this *Client) ExecFunc(funcName string, param interface{}) []reflect.Value {
+	params := make([]interface{}, 0)
+	params = append(params, param)
+
+	pFunc := this.FindCall(funcName)
+	if pFunc != nil {
+		f := pFunc.FuncVal
+		k := pFunc.FuncType
+		strParams := pFunc.FuncParams
+
+		if k.NumIn() != len(params) {
+			log.Printf("func [%s] can not call, func params [%s], params [%v]", funcName, strParams, params)
+			return nil
+		}
+
+		if len(params) >= 1 {
+			in := make([]reflect.Value, len(params))
+			for i, param := range params {
+				in[i] = reflect.ValueOf(param)
+			}
+
+			ret := f.Call(in)
+			return ret
+		} else {
+			log.Printf("func [%s] params at least one context", funcName)
+			//f.Call([]reflect.Value{reflect.ValueOf(ctx)})
+		}
+	}
+
+	return nil
 }

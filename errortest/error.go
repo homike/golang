@@ -43,7 +43,6 @@ func isCaredNetError(err error) bool {
 				log.Print("connection refused")
 				return true
 			}
-
 		}
 		return true
 	}

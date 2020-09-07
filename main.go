@@ -2,85 +2,42 @@ package main
 
 import (
 	"fmt"
-	"log"
-	_ "net/http/pprof"
-	"runtime"
-	"time"
+	"gotest/basetest"
 )
 
-const kItemTypeOffset = 100000
+// 关卡ID规则
+// 10010101
+// 1001     章节ID
+// 100101   具体ID
+// 10010101 难度
 
-func GetItemKey(itemType, itemID int32) int32 {
-	return itemType*kItemTypeOffset + itemID
+func GetLevelType(svrLevelID int32) int32 {
+	return svrLevelID / 10000000
 }
 
-func ParseItemKey(itemKey int32) (int32, int32) {
-	return itemKey / kItemTypeOffset, itemKey % kItemTypeOffset
+func GetChapter(svrLevelID int32) int32 {
+	return svrLevelID / 10000
+}
+
+func GetCommonLevelID(svrLevelID int32) int32 {
+	return svrLevelID / int32(100)
+}
+
+func GetDifficulty(svrLevelID int32) int32 {
+	return svrLevelID % int32(100)
+}
+
+func ParseSvrLevelID(svrLevelID int32) (int32, int32, int32) {
+	return GetLevelType(svrLevelID), GetCommonLevelID(svrLevelID), GetDifficulty(svrLevelID)
+}
+
+func GenSvrLevelID(levelID, diff int32) int32 {
+	return levelID*10 + diff
 }
 
 func main() {
-	key := GetItemKey(9991, 99991)
-	fmt.Println("key ", key)
+	basetest.RunReturn()
 
-	id, num := ParseItemKey(key)
-	fmt.Println("id ", id, "num ", num)
-	//stack.PrintGoroutineMemConsume()
-	//channeltest.RunUnbounded()
-	//go timertest.RunTimerAfter()
-
-	//test2()
-
-	//http.ListenAndServe("0.0.0.0:8899", nil)
-
-}
-
-func test() {
-	test2()
-}
-
-func test2() {
-	pc, file, line, _ := runtime.Caller(3)
-	f := runtime.FuncForPC(pc)
-	log.Println("pc3 ", pc, "file ", file, "line", line, "name", f.Name())
-
-	pc, file, line, _ = runtime.Caller(2)
-	f = runtime.FuncForPC(pc)
-	log.Println("pc2 ", pc, "file ", file, "line", line, "name", f.Name())
-
-	pc, file, line, _ = runtime.Caller(1)
-	f = runtime.FuncForPC(pc)
-	log.Println("pc1 ", pc, "file ", file, "line", line, "name", f.Name())
-
-	pc, file, line, _ = runtime.Caller(0)
-	f = runtime.FuncForPC(pc)
-	log.Println("pc0 ", pc, "file ", file, "line", line, "name", f.Name())
-
-	CloseMsgSyn := make(chan struct{})
-
-	go func() {
-		for {
-			select {
-			case <-CloseMsgSyn:
-				fmt.Println("close1")
-				return
-			default:
-				fmt.Println("aa")
-			}
-		}
-	}()
-
-	go func() {
-		for {
-			select {
-			case <-CloseMsgSyn:
-				fmt.Println("close2")
-				return
-			default:
-				fmt.Println("aa")
-			}
-		}
-	}()
-
-	time.Sleep(10)
-	close(CloseMsgSyn)
+	ltype, lcommonID, ldiff := ParseSvrLevelID(10020304)
+	fmt.Printf("parse levelID : %v, %v, %v \n", ltype, lcommonID, ldiff)
 }
