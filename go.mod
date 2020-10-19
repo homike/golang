@@ -13,4 +13,5 @@ require (
 	github.com/google/wire v0.4.0
 	github.com/homike/gotest v0.0.0-20200605085505-b37d65524ebb
 	github.com/jhump/protoreflect v1.7.0
+	google.golang.org/protobuf v1.25.0 // indirect
 )

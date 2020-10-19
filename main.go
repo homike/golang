@@ -1,9 +1,9 @@
 package main
 
-import (
-	. "gotest/interfacetest"
-)
+import "gotest/oop"
+
+//. "gotest/interfacetest"
 
 func main() {
-	TestNil()
+	oop.RunOOP()
 }
