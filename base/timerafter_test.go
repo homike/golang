@@ -1,7 +1,8 @@
-package timertest
+package base
 
 import (
 	"fmt"
+	"testing"
 	"time"
 )
 
@@ -34,7 +35,7 @@ func useTimerAfterRight(queue <-chan string) {
 	}
 }
 
-func RunTimerAfter() {
+func Test_TimerAfter(t *testing.T) {
 	queue := make(chan string, 100)
 	go useTimerAfterWrong(queue)
 	for i := 0; i < 600000; i++ {

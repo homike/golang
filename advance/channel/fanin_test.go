@@ -4,6 +4,7 @@ import (
 	"fmt"
 	MRand "math/rand"
 	"sync"
+	"testing"
 	"time"
 )
 
@@ -73,7 +74,7 @@ func consumer(robots chan *TestR) {
 	fmt.Println("End BatchDo")
 }
 
-func main() {
+func Test_FanIn(t *testing.T) {
 	reqQueue = make(chan struct{}, 2)
 
 	robots := producer(5)

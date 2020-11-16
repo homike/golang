@@ -1,4 +1,4 @@
-package mathtest
+package base
 
 import "fmt"
 

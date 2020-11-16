@@ -1,9 +1,10 @@
-package basetest
+package base
 
 import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"testing"
 )
 
 type JsonStruct struct {
@@ -14,7 +15,7 @@ type JsonStruct2 struct {
 	Date int64 `json:"date"`
 }
 
-func JsonTest() {
+func Test_Json(t *testing.T) {
 	//fmt.Println("9223372036854775807")
 	j1 := JsonStruct{
 		Date: math.MaxInt64,

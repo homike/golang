@@ -1,4 +1,4 @@
-package random
+package base
 
 import (
 	"fmt"
@@ -35,7 +35,7 @@ func GetRandomWeightID(ids, weights []int) int {
 	return ids[0]
 }
 
-func RunRandom() {
+func Test_Random() {
 	for _, randIndex := range rand.Perm(10) {
 		fmt.Println("num", randIndex)
 	}

@@ -1,12 +1,15 @@
-package basetest
+package base
 
-import "sync"
+import (
+	"sync"
+	"testing"
+)
 
 var sm sync.Map
 
 func insertKeys() {
 	keys := make([]interface{}, 0, 10)
-	// Store some keys
+	// Store some ke
 	for i := 0; i < 10; i++ {
 		v := make([]int, 1)
 		keys = append(keys, &v)
@@ -28,7 +31,7 @@ func shutdown() {
 	})
 }
 
-func RunSyncMap() {
+func Test_SyncMap(t *testing.T) {
 	insertKeys()
 	// do something ...
 	shutdown()

@@ -1,10 +1,8 @@
-package channeltest
+package channel
 
 import (
 	"fmt"
-	"math"
 	"sync"
-	"time"
 )
 
 type Unbounded struct {
@@ -52,35 +50,4 @@ func (b *Unbounded) Load() {
 func (b *Unbounded) Get() <-chan interface{} {
 	fmt.Println("Get")
 	return b.c
-}
-
-//------------------------------------------------------
-func RunUnbounded() {
-	bound := NewUnbounded()
-
-	go func() {
-		for i := 0; i < math.MaxInt32; i++ {
-			bound.Put(i)
-			bound.Put(i)
-			bound.Put(i)
-			time.Sleep(1 * time.Second)
-		}
-	}()
-
-	for i := 0; i < 2; i++ {
-		go func(index int) {
-			for {
-				select {
-				case t := <-bound.Get():
-					bound.Load()
-					v := t.(int)
-					fmt.Println("index: ", index, ", len: ", len(bound.backlog), "value: ", v)
-					time.Sleep(1 * time.Second)
-				}
-			}
-		}(i)
-	}
-
-	for {
-	}
 }

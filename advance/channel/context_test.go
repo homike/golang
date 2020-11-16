@@ -3,6 +3,7 @@ package channeltest
 import (
 	"context"
 	"fmt"
+	"testing"
 	"time"
 )
 
@@ -37,7 +38,7 @@ func childFunc(cont context.Context, num *int) {
 	}
 }
 
-func RunContext() {
+func Test_Context(t *testing.T) {
 	gen := func(ctx context.Context) <-chan int {
 		dst := make(chan int)
 		n := 1

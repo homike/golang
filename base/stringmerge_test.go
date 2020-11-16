@@ -1,4 +1,4 @@
-package basetest
+package base
 
 import (
 	"bytes"
@@ -10,7 +10,6 @@ import (
 ////////////////////////////////////
 // 字符串拼接，效率测试
 ///////////////////////////////////
-
 func benchmarkStringFunction(n int, index int) (d time.Duration) {
 	v := "ni shuo wo shi bu shi tai wu liao le a?"
 	var s string
@@ -50,7 +49,7 @@ func benchmarkStringFunction(n int, index int) (d time.Duration) {
 	return d
 }
 
-func RunString() {
+func Test_String() {
 	k := 5
 	d := [5]time.Duration{}
 	for i := 0; i < k; i++ {

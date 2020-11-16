@@ -1,8 +1,11 @@
-package bittest
+package base
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
-func RunBit() {
+func Test_Bit(t *testing.T) {
 	//var tnum uint32 = 7
 	var tdata uint32 = 0
 
