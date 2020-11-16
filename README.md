@@ -2,96 +2,49 @@
 It's userful example for golang api test.
 
 # 目录
-├── actor	// actor模型测试
-├── astar
-│   └── astar.go
-├── basetest
-│   ├── callertest.go
-│   ├── jsontest.go
-│   ├── mapTest.go
-│   ├── sliceTest.go
-│   └── stringTest.go
-├── bittest
-│   └── bittest.go
-├── channeltest
-│   ├── channelclose2.go
-│   ├── channelclose.go
-│   ├── channel_test.go
-│   ├── context.go
-│   ├── fanin.go
-│   ├── pipeline.go
-│   └── unbounded.go
-├── dao
-│   └── dao.go
-├── errortest
-│   └── error.go
-├── gobugs
-│   └── gobugs.go
-├── gocode
-│   ├── go_code.go
-│   └── x5_code.go
-├── gologs
-│   ├── logger
-│   │   ├── log_mgr.go
-│   │   ├── nlog.go
-│   │   ├── nlog_mgr.go
-│   │   ├── tlog_client.go
-│   │   ├── tlog.go
-│   │   └── tlog_mgr.go
-│   ├── logrusastone_test.go
-│   ├── logrus_test.go
-│   ├── syslog_test.go
-│   ├── test.sh
-│   └── zerolog_test.go
-├── go.mod
-├── go.sum
-├── gotest
-├── grpctest
-│   ├── grpcclient.go
-│   └── grpcserver.go
-├── httptest
-│   ├── redisTest.go
-│   ├── simpleHTTPClient.go
-│   └── simpleHTTPServer.go
-├── interfacetest
-│   ├── childfather2.go
-│   ├── childfather.go
-│   ├── interfaceFunc1.go
-│   ├── interfaceFunc2.go
-│   ├── interfaceFunc.go
-│   ├── interfaceTest2.go
-│   ├── interfaceTest3.go
-│   ├── interfaceTest4.go
-│   ├── interfaceTest.go
-│   └── polymorphic.go
-├── lockfree
-│   └── lockfree.go
-├── locktest
-│   ├── locktest.go
-│   └── mutex2rwmutex.go
-├── main.go
-├── makefile
-├── mathtest
-│   └── mathtest.go
-├── memorymodel
-│   ├── locktest.go
-│   └── memorymodel.go
-├── random
-│   └── random.go
-├── README.md
-├── reflect
-│   ├── reflectTag2.go
-│   └── reflectTag.go
-├── sockettest
-│   ├── client.go
-│   └── server.go
-├── stack
-│   ├── stack.go
-│   └── stack_test.go
-├── thirdparty
-│   ├── jsonTest.go
-│   ├── randomTest.go
-│   └── xmlTest.go
-└── timertest
-    └── timerafter.go
+    - advance       高级特性
+    - algorithm     算法
+    - base          基础函数
+    - bugs          bug记录
+    - design        设计模式 
+    - network       网络库
+    - thirdparty    第三方库
 
+# cmd
+
+## go test
+        -v              显示详细的输出
+        -bench regexp   执行相应的 benchmarks, 例如 -bench=.
+
+### test example
+    - go test -v helloworld_test.go
+    - go test -v -run TestA helloworld_test.go
+```
+TestHelloWorld(t *testing.T) {
+        t.Log("hello world")
+}
+```
+
+### benchmark example
+    - go test -v -bench=. benchmark_test.go
+    - 
+```
+Benchmark_Add(b *testing.B) {
+    // 重置计时器
+    b.ResetTimer()
+    // 停止计时器
+    b.StopTimer()
+    // 开始计时器
+    b.StartTimer()
+
+    var n int
+    for i := 0; i < b.N; i++ {
+        n++
+    }
+}
+```
+
+## go run 
+    - go run -race
+    - go build -race
+检测竞争

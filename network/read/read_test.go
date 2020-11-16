@@ -59,7 +59,10 @@ func BenchmarkRead_Once2(b *testing.B) {
 			log.Println(fmt.Sprintf("Read message error: %s, session will be closed immediately", err.Error()))
 			return
 		}
-		bufReader.Read_ByteBuf(buf[:n])
+		_, err = bufReader.Read_ByteBuf(buf[:n])
+		if err != nil {
+			panic(err)
+		}
 		syscall.Seek(int(f.Fd()), 0, 0)
 	}
 }
