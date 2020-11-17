@@ -33,6 +33,7 @@ func Test_Unbounded(t *testing.T) {
 		}(i)
 	}
 
-	for {
+	select {
+	case <-time.After(3 * time.Second):
 	}
 }

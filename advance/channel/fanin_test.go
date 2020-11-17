@@ -1,4 +1,4 @@
-package channeltest
+package channel
 
 import (
 	"fmt"
@@ -74,7 +74,7 @@ func consumer(robots chan *TestR) {
 	fmt.Println("End BatchDo")
 }
 
-func Test_FanIn(t *testing.T) {
+func _Test_FanIn(t *testing.T) {
 	reqQueue = make(chan struct{}, 2)
 
 	robots := producer(5)

@@ -1,6 +1,9 @@
 package base
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
 const kItemTypeOffset = 100000
 
@@ -12,7 +15,7 @@ func ParseItemKey(itemKey int32) (int32, int32) {
 	return itemKey / kItemTypeOffset, itemKey % kItemTypeOffset
 }
 
-func RunMathTest() {
+func Test_Math(t *testing.T) {
 	key := GetItemKey(9991, 99991)
 	fmt.Println("key ", key)
 

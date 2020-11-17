@@ -18,7 +18,8 @@ It's userful example for golang api test.
 
 ### test example
     - go test -v helloworld_test.go
-    - go test -v -run TestA helloworld_test.go
+    - go test -v -run TestA helloworld_test.go   运行文件中指定的函数
+    - go test -v unbounded.go unbounded_test.go  运行对指定文件有引用的测试用例
 ```
 TestHelloWorld(t *testing.T) {
         t.Log("hello world")

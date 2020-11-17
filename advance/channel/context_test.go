@@ -1,4 +1,4 @@
-package channeltest
+package channel
 
 import (
 	"context"

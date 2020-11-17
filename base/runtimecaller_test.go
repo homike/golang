@@ -3,13 +3,14 @@ package base
 import (
 	"log"
 	"runtime"
+	"testing"
 )
 
-func test() {
-	test2()
+func Test_Caller(t *testing.T) {
+	test()
 }
 
-func test2() {
+func test() {
 	pc, file, line, _ := runtime.Caller(3)
 	f := runtime.FuncForPC(pc)
 	log.Println("pc3 ", pc, "file ", file, "line", line, "name", f.Name())

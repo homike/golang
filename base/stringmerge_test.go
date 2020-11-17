@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"strings"
+	"testing"
 	"time"
 )
 
@@ -49,7 +50,7 @@ func benchmarkStringFunction(n int, index int) (d time.Duration) {
 	return d
 }
 
-func Test_String() {
+func Test_String(t *testing.T) {
 	k := 5
 	d := [5]time.Duration{}
 	for i := 0; i < k; i++ {

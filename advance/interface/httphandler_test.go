@@ -1,7 +1,10 @@
 //  http handler func 的优化过程
 package interfacetest
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
 // 基本的接口的用法, 实现Do接口
 type handler interface {
@@ -23,7 +26,7 @@ func (w welcome) Do(k, v interface{}) {
 	fmt.Printf("我叫%s,今年%d岁\n", k, v)
 }
 
-func Test_FuncHandler1() {
+func Test_FuncHandler1(t *testing.T) {
 	persons := make(map[interface{}]interface{})
 	persons["张三"] = 20
 	persons["李四"] = 23
@@ -49,7 +52,7 @@ func SelfInfo(k, v interface{}) {
 	fmt.Printf("大家好, 我叫%s,今年%d岁\n", k, v)
 }
 
-func Test_FuncHandler2() {
+func Test_FuncHandler2(t *testing.T) {
 	persons := make(map[interface{}]interface{})
 	persons["张三"] = 20
 	persons["李四"] = 23
@@ -65,7 +68,7 @@ func EachFunc(m map[interface{}]interface{}, f func(k, v interface{})) {
 	Each(m, HandlerFunc(f))
 }
 
-func Test_FuncHandler3() {
+func Test_FuncHandler3(t *testing.T) {
 	persons := make(map[interface{}]interface{})
 	persons["张三"] = 20
 	persons["李四"] = 23

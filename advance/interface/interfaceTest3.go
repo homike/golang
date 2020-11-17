@@ -32,7 +32,7 @@ package interfacetest
 
 import "fmt"
 
-type IParamer interface {
+type Paramer interface {
 	Do()
 }
 
@@ -43,7 +43,7 @@ func (t *testStruct) Do() {
 	(*t)++
 }
 
-func CreateObj(i IParamer) {
+func CreateObj(i Paramer) {
 	// var t testStruct
 	// (*i) = &t
 	i.Do()
@@ -51,7 +51,7 @@ func CreateObj(i IParamer) {
 
 func RunInterface() {
 	var t testStruct
-	var i IParamer = &t
+	var i Paramer = &t
 	CreateObj(i)
 	i.Do()
 }

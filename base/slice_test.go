@@ -2,6 +2,7 @@ package base
 
 import (
 	"fmt"
+	"testing"
 )
 
 type myStruct struct {
@@ -22,7 +23,7 @@ func Delete(s *sliceType) {
 	*s = append((*s)[:0], (*s)[1:]...)
 }
 
-func Run2() {
+func Test_Slice(t *testing.T) {
 	testS := myStruct{
 		value: 0,
 		name:  "test",

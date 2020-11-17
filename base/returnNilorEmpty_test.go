@@ -25,5 +25,4 @@ func Test_Return(t *testing.T) {
 	}
 	s = append(s, ret...)
 	fmt.Printf("slice len: %v, value: %v \n", len(s), s)
-
 }

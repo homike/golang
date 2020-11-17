@@ -3,6 +3,7 @@ package base
 import (
 	"fmt"
 	"math/rand"
+	"testing"
 )
 
 func RandNum(base int, n int) int {
@@ -35,7 +36,7 @@ func GetRandomWeightID(ids, weights []int) int {
 	return ids[0]
 }
 
-func Test_Random() {
+func Test_Random(t *testing.T) {
 	for _, randIndex := range rand.Perm(10) {
 		fmt.Println("num", randIndex)
 	}
