@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io/ioutil"
+	"testing"
 )
 
 type SimConfig struct {
@@ -32,7 +33,7 @@ func readFile(filename string) (*SimConfig, error) {
 
 }
 
-func RunXML() {
+func TestXML(t *testing.T) {
 	SimCfg, err := readFile("sim.xml")
 
 	if err != nil {
