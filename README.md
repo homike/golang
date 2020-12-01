@@ -9,6 +9,7 @@ It's userful example for golang api test.
     - design        设计模式 
     - network       网络库
     - thirdparty    第三方库
+    - question      笔试题
 
 # cmd
 
