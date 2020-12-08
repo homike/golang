@@ -188,3 +188,18 @@ func Test_ChannelClose2(t *testing.T) {
 	wgReceivers.Wait()
 	log.Println("stopped by", stoppedBy)
 }
+
+// 防止channel被多个gorutine重复close
+func Test_DoubelClose(t *testing.T) {
+	var closed chan int
+	/*
+		select {
+		case <-closed:
+			close(c.closed)
+		}
+	*/
+	var once sync.Once
+	once.Do(func() {
+		close(closed)
+	})
+}

@@ -3,7 +3,7 @@ package gobugs
 import (
 	"context"
 	"fmt"
-	"sync"
+	"testing"
 	"time"
 )
 
@@ -23,22 +23,7 @@ func gorutineArgs() {
 	}
 }
 
-// 2.防止channel被多个gorutine重复close
-func doubleClose() {
-	var closed chan int
-	/*
-		select {
-		case <-closed:
-			close(c.closed)
-		}
-	*/
-	var once sync.Once
-	once.Do(func() {
-		close(closed)
-	})
-}
-
-// 3.当stopCh 和 ticker 同时触发时，可能不能正常的return, 所以需要在循环开头，加上判断
+// 1.当stopCh 和 ticker 同时触发时，可能不能正常的return, 所以需要在循环开头，加上判断
 func f() {}
 func StopCh(stopCh chan int) {
 	ticker := time.NewTicker(10)
@@ -61,9 +46,10 @@ func StopCh(stopCh chan int) {
 
 }
 
-// 4.select 等待多个channnel时，都准备就绪的情况，会随机选择一个。
-// 如果等待timer.C, 则dur为0的时候，就直接返回了
-func SelectRandom(ctx context.Context, dur int) {
+// 1.select 等待多个channnel时，都准备就绪的情况，会随机选择一个。
+// 需求: 如果dur 为 0, 则没有超时, 一直等待done
+//		 如果等待timer.C, 则dur为0的时候，就直接返回了
+func SelectTimeOut(ctx context.Context, dur int) {
 	//timer := time.NewTimer(time.Duration(0))
 	var timeout <-chan time.Time
 	if dur > 0 {
@@ -82,12 +68,7 @@ func SelectRandom(ctx context.Context, dur int) {
 	}
 }
 
-func RunBugs() {
-	//1
-	gorutineArgs()
-	time.Sleep(10000)
-
-	//4
-	ctx, _ := context.WithTimeout(context.Background(), time.Duration(5))
-	SelectRandom(ctx, 0)
+func TestSelectTimeOut(t *testing.T) {
+	ctx, _ := context.WithTimeout(context.Background(), time.Duration(5*time.Second))
+	SelectTimeOut(ctx, 0)
 }
