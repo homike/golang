@@ -26,6 +26,7 @@ require (
 	github.com/softlayer/softlayer-go v1.0.1
 	github.com/stretchr/testify v1.4.0
 	go.uber.org/zap v1.16.0 // indirect
+	golang.org/dl v0.0.0-20201203213101-c6ce50f27f15 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/square/go-jose.v2 v2.5.1
 	k8s.io/kube-openapi v0.0.0-20201107163737-74b467f3a622 // indirect
