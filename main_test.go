@@ -41,4 +41,7 @@ func TestXX(t *testing.T) {
 
 	s.Add("aa", 1)
 	s.Snapshot()
+
+	for i := 1; i < 100; i++ {
+	}
 }

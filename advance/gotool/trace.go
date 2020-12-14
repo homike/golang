@@ -7,7 +7,6 @@ import (
 	"runtime"
 	"runtime/trace"
 	"sync"
-	"testing"
 )
 
 func counter(wg *sync.WaitGroup) {
@@ -20,7 +19,7 @@ func counter(wg *sync.WaitGroup) {
 	}
 }
 
-func TestTrace(t *testing.T) {
+func Trace() {
 	runtime.GOMAXPROCS(1)
 	var traceProfile = flag.String("traceprofile", "trace.out", "write trace profile to file")
 	flag.Parse()
