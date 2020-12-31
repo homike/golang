@@ -1,9 +1,11 @@
 package test
 
 import (
+	"encoding/json"
 	"fmt"
 	"sync"
 	"testing"
+	"time"
 )
 
 type Stats struct {
@@ -34,7 +36,7 @@ func (s *Stats) Add(name string, num int) {
 	s.counters.Store(name, num)
 }
 
-func TestXX(t *testing.T) {
+func _TestXX(t *testing.T) {
 	s := &Stats{
 		//counters: make(map[string]int),
 	}
@@ -44,4 +46,28 @@ func TestXX(t *testing.T) {
 
 	for i := 1; i < 100; i++ {
 	}
+}
+
+func _TestXX2(t *testing.T) {
+	var x int
+	inc := func() int {
+		x++
+		return x
+	}
+	fmt.Println(func() (a, b int) {
+		return inc(), inc()
+	}())
+}
+
+func TestXX3(t *testing.T) {
+	t1 := struct {
+		time.Time
+		N int
+	}{
+		time.Date(2020, 12, 20, 0, 0, 0, 0, time.UTC),
+		5000,
+	}
+
+	m, _ := json.Marshal(t1)
+	fmt.Printf("%s", m)
 }
