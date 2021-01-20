@@ -71,3 +71,16 @@ func TestXX3(t *testing.T) {
 	m, _ := json.Marshal(t1)
 	fmt.Printf("%s", m)
 }
+
+func TestXX4(t *testing.T) {
+	chClose := make(chan int)
+	go func() {
+		select {
+		case <-chClose:
+			return
+		}
+	}()
+
+	close(chClose)
+	chClose <- 1
+}
