@@ -14,12 +14,12 @@ var chanExit chan struct{}
 var WGroup sync.WaitGroup
 
 type actor struct {
-	chanExit chan struct{}
+	chanExit chan int
 }
 
 func NewActor() *actor {
 	return &actor{
-		chanExit: make(chan struct{}),
+		chanExit: make(chan int, 1),
 	}
 }
 
@@ -41,7 +41,7 @@ func (a *actor) Start() {
 }
 
 func (a *actor) Stop() {
-	close(a.chanExit)
+	a.chanExit <- 1
 }
 
 func Benchmark_MultiGorutineExit_GlobalChannel(b *testing.B) {
@@ -63,7 +63,7 @@ func Benchmark_MultiGorutineExit_GlobalChannel(b *testing.B) {
 	}
 
 	close(chanExit)
-	WGroup.Wait()
+	//WGroup.Wait()
 }
 
 func Benchmark_MultiGorutineExit_PerChannel(b *testing.B) {
@@ -91,5 +91,5 @@ func Benchmark_MultiGorutineExit_PerChannel(b *testing.B) {
 			a.Stop()
 			return true
 		})
-	WGroup.Wait()
+	//WGroup.Wait()
 }
