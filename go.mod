@@ -34,6 +34,7 @@ require (
 	github.com/softlayer/softlayer-go v1.0.1
 	github.com/spf13/cobra v1.1.1 // indirect
 	github.com/stretchr/testify v1.6.1
+	github.com/t-yuki/gocover-cobertura v0.0.0-20180217150009-aaee18c8195c // indirect
 	go.starlark.net v0.0.0-20201210151846-e81fc95f7bd5 // indirect
 	go.uber.org/zap v1.16.0 // indirect
 	golang.org/dl v0.0.0-20201203213101-c6ce50f27f15 // indirect
