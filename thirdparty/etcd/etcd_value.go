@@ -4,20 +4,19 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"gotest/gologs/logger"
 	"io"
 	"strconv"
 	"strings"
 	"time"
 
-	etcd3 "github.com/coreos/etcd/clientv3"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 func GetServerConfig(key, target string) (io.Reader, error) {
 	// get endpoints for register dial address
-	client, err := etcd3.New(etcd3.Config{Endpoints: strings.Split(target, ",")})
+	client, err := clientv3.New(clientv3.Config{Endpoints: strings.Split(target, ",")})
 	if err != nil {
-		return nil, fmt.Errorf("grpclb: create etcd3 client failed: %v", err)
+		return nil, fmt.Errorf("grpclb: create clientv3 client failed: %v", err)
 	}
 	defer client.Close()
 
@@ -26,9 +25,9 @@ func GetServerConfig(key, target string) (io.Reader, error) {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
 	// query addresses from etcd
-	resp, err := client.Get(ctx, prefix, etcd3.WithPrefix())
+	resp, err := client.Get(ctx, prefix, clientv3.WithPrefix())
 	if err != nil {
-		logger.Fatal("AddWatch Error:%v", key)
+		//logger.Fatal("AddWatch Error:%v", key)
 	}
 
 	//logger.Error("%v, config %v", prefix, resp)
@@ -36,7 +35,7 @@ func GetServerConfig(key, target string) (io.Reader, error) {
 	return bytes.NewReader(resp.Kvs[0].Value), nil
 }
 
-func unmarshalConfig(resp *etcd3.GetResponse) map[int]int {
+func unmarshalConfig(resp *clientv3.GetResponse) map[int]int {
 	serverInfo := map[int]int{}
 
 	if resp == nil || resp.Kvs == nil {
@@ -48,18 +47,18 @@ func unmarshalConfig(resp *etcd3.GetResponse) map[int]int {
 			key := string(resp.Kvs[i].Key)
 			sl := strings.Split(key, "/")
 			if len(sl) <= 0 {
-				logger.Error("Split resp.Kvs[i].Key:%v", key)
+				//logger.Error("Split resp.Kvs[i].Key:%v", key)
 				continue
 			}
 			idStr := sl[len(sl)-1]
 			id, err := strconv.Atoi(idStr)
 			if nil != err {
-				logger.Error("Atoi resp.Kvs[i].Key:%v", key)
+				//logger.Error("Atoi resp.Kvs[i].Key:%v", key)
 				continue
 			}
 			count, err := strconv.Atoi(string(v))
 			if nil != err {
-				logger.Error("Atoi resp.Kvs[i].Key:%v", string(v))
+				//logger.Error("Atoi resp.Kvs[i].Key:%v", string(v))
 				continue
 			}
 
