@@ -59,7 +59,7 @@ func _TestXX2(t *testing.T) {
 	}())
 }
 
-func TestXX3(t *testing.T) {
+func _TestXX3(t *testing.T) {
 	t1 := struct {
 		time.Time
 		N int
@@ -72,7 +72,7 @@ func TestXX3(t *testing.T) {
 	fmt.Printf("%s", m)
 }
 
-func TestXX4(t *testing.T) {
+func _TestXX4(t *testing.T) {
 	chClose := make(chan int)
 	go func() {
 		select {
@@ -83,4 +83,16 @@ func TestXX4(t *testing.T) {
 
 	close(chClose)
 	chClose <- 1
+}
+
+func TestXX5(t *testing.T) {
+	zoneID, svrID := 0, 123
+	key1 := (int64(zoneID) << 32) | int64(svrID)
+	key2 := int64(svrID)
+
+	if key1 == key2 {
+		fmt.Println("true", key1, " = ", key2)
+	} else {
+		fmt.Println("false", key1, " != ", key2)
+	}
 }

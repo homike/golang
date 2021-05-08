@@ -1,4 +1,4 @@
-package etcd
+package custom_naming
 
 import (
 	"context"

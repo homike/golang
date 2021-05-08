@@ -1,4 +1,4 @@
-package etcd
+package etcd_naming
 
 import (
 	"context"
@@ -12,8 +12,28 @@ import (
 
 // 服务信息
 type ServiceInfo struct {
-	Name string
-	IP   string
+	Addr     string
+	Metadata map[string]string
+}
+
+const kMetaData_Name = "Name"
+
+func NewServiceInfo(addr, name string) ServiceInfo {
+	info := &ServiceInfo{
+		Addr:     addr,
+		Metadata: make(map[string]string),
+	}
+	info.Metadata[kMetaData_Name] = name
+
+	return *info
+}
+
+func (s *ServiceInfo) Name() string {
+	return s.Metadata[kMetaData_Name]
+}
+
+func (s *ServiceInfo) IP() string {
+	return s.Addr
 }
 
 type Service struct {
@@ -65,8 +85,6 @@ func (service *Service) Start() (err error) {
 			log.Printf("Recv reply from service: %s, ttl:%d", service.getKey(), resp.TTL)
 		}
 	}
-
-	return
 }
 
 func (service *Service) Stop() {
@@ -74,9 +92,7 @@ func (service *Service) Stop() {
 }
 
 func (service *Service) keepAlive() (<-chan *clientv3.LeaseKeepAliveResponse, error) {
-	info := &service.ServiceInfo
-	key := info.Name + "/" + info.IP
-	val, _ := json.Marshal(info)
+	val, _ := json.Marshal(&service.ServiceInfo)
 
 	// 创建一个租约
 	resp, err := service.client.Grant(context.TODO(), 5)
@@ -85,7 +101,7 @@ func (service *Service) keepAlive() (<-chan *clientv3.LeaseKeepAliveResponse, er
 		return nil, err
 	}
 
-	_, err = service.client.Put(context.TODO(), key, string(val), clientv3.WithLease(resp.ID))
+	_, err = service.client.Put(context.TODO(), service.getKey(), string(val), clientv3.WithLease(resp.ID))
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
@@ -104,5 +120,5 @@ func (service *Service) revoke() error {
 }
 
 func (service *Service) getKey() string {
-	return service.ServiceInfo.Name + "/" + service.ServiceInfo.IP
+	return service.ServiceInfo.Name() + "/" + service.ServiceInfo.IP()
 }

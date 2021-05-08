@@ -1,10 +1,8 @@
 package etcd
 
 import (
-	"bytes"
 	"context"
 	"fmt"
-	"io"
 	"strconv"
 	"strings"
 	"time"
@@ -12,27 +10,41 @@ import (
 	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
-func GetServerConfig(key, target string) (io.Reader, error) {
+type configItem struct {
+	Key   string
+	Value []byte
+}
+
+func GetServerConfig(endpoints, target string) ([]configItem, error) {
 	// get endpoints for register dial address
-	client, err := clientv3.New(clientv3.Config{Endpoints: strings.Split(target, ",")})
+	client, err := clientv3.New(clientv3.Config{Endpoints: strings.Split(endpoints, ",")})
 	if err != nil {
 		return nil, fmt.Errorf("grpclb: create clientv3 client failed: %v", err)
 	}
 	defer client.Close()
 
 	// prefix is the etcd prefix/value to watch
-	prefix := fmt.Sprintf("/%s/%s", "etcdname", key)
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	//prefix := fmt.Sprintf("/%s/%s", "etcdname", key)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
 	// query addresses from etcd
-	resp, err := client.Get(ctx, prefix, clientv3.WithPrefix())
+	resp, err := client.Get(ctx, target, clientv3.WithPrefix())
 	if err != nil {
 		//logger.Fatal("AddWatch Error:%v", key)
 	}
 
 	//logger.Error("%v, config %v", prefix, resp)
 
-	return bytes.NewReader(resp.Kvs[0].Value), nil
+	//return bytes.NewReader(resp.Kvs[0].Value), nil
+	items := []configItem{}
+	for _, v := range resp.Kvs {
+		items = append(items, configItem{
+			Key:   string(v.Key),
+			Value: v.Value,
+		})
+	}
+	return items, nil
 }
 
 func unmarshalConfig(resp *clientv3.GetResponse) map[int]int {
