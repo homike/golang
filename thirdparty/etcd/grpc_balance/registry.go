@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
-	"strings"
 	"time"
 
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -13,24 +12,26 @@ import (
 
 // 服务信息
 type ServiceInfo struct {
-	Addr     string
-	Metadata map[string]string
+	Addr string
+	// 当使用metadata时, 会有报错
+	Metadata1 map[string]string
 }
 
 const kMetaData_Name = "Name"
 
 func NewServiceInfo(addr, name string) ServiceInfo {
 	info := &ServiceInfo{
-		Addr:     addr,
-		Metadata: make(map[string]string),
+		Addr:      addr,
+		Metadata1: make(map[string]string),
 	}
-	info.Metadata[kMetaData_Name] = name
+	info.Metadata1[kMetaData_Name] = name
 
 	return *info
 }
 
 func (s *ServiceInfo) Name() string {
-	return s.Metadata[kMetaData_Name]
+	return s.Metadata1[kMetaData_Name]
+	//return "Ping"
 }
 
 func (s *ServiceInfo) IP() string {
@@ -121,7 +122,7 @@ func (service *Service) revoke() error {
 }
 
 func (service *Service) getKey() string {
-	//return service.ServiceInfo.Name() + "/" + service.ServiceInfo.IP()
-	ip := strings.Replace(service.ServiceInfo.IP(), ":", "", -1)
-	return service.ServiceInfo.Name() + "/" + ip
+	return service.ServiceInfo.Name() + "/" + service.ServiceInfo.IP()
+	//ip := strings.Replace(service.ServiceInfo.IP(), ":", "", -1)
+	//return service.ServiceInfo.Name() + "/" + ip
 }
