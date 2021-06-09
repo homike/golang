@@ -3,6 +3,7 @@ module gotest
 go 1.13
 
 require (
+	github.com/BurntSushi/toml v0.3.1
 	github.com/facebookarchive/inject v0.0.0-20180706035515-f23751cae28b
 	github.com/facebookgo/ensure v0.0.0-20200202191622-63f1cf65ac4c // indirect
 	github.com/facebookgo/inject v0.0.0-20180706035515-f23751cae28b // indirect
@@ -13,12 +14,15 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.5.2
 	github.com/google/wire v0.4.0
+	github.com/gotomicro/ego v0.5.7
+	github.com/gotomicro/ego-component/egorm v0.2.1
+	github.com/json-iterator/go v1.1.10
 	github.com/kr/text v0.2.0 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pkg/errors v0.9.1
-	github.com/stretchr/testify v1.6.1 // indirect
+	github.com/stretchr/testify v1.7.0
 	go.etcd.io/etcd/client/v3 v3.5.0-alpha.0
-	go.uber.org/atomic v1.6.0
+	go.uber.org/atomic v1.7.0
 	golang.org/x/lint v0.0.0-20201208152925-83fdc39ff7b5 // indirect
 	golang.org/x/net v0.0.0-20210421230115-4e50805a0758 // indirect
 	golang.org/x/sys v0.0.0-20210421221651-33663a62ff08 // indirect
