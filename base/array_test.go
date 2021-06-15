@@ -1,5 +1,10 @@
 package base
 
+import (
+	"fmt"
+	"testing"
+)
+
 /*
 
 import (
@@ -47,3 +52,18 @@ func Test_SliceTrap_Args(t *testing.T) {
 	}
 }
 */
+var arr [2]int
+
+func returnTest() []int {
+	return arr[:]
+}
+
+func TestArrayToSlice(t *testing.T) {
+	arr = [2]int{1, 2}
+	sli := returnTest()
+	sli[0] = 100
+
+	for _, v := range arr {
+		fmt.Print(v, ",")
+	}
+}

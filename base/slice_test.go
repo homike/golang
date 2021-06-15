@@ -46,6 +46,9 @@ func modiftySlice(s []*myStruct) {
 	//s = append(s, &myStruct{value: 2})
 	s[0] = &myStruct{value: 100}
 	s[1].value = 200
+	s = append(s, &myStruct{value: 300})
+
+	fmt.Printf("two：%p\n", &s)
 }
 
 // slice陷阱: slice的传递是值拷贝，传递的是不同的slice，
@@ -60,44 +63,84 @@ func _Test_SliceTrap(t *testing.T) {
 	}
 }
 
+type StructA struct {
+	Name  string
+	Slice []*myStruct
+}
+
+var baseStruct *StructA
 var baseSlice []*myStruct
 
+func init() {
+	baseStruct = &StructA{
+		Name:  "base",
+		Slice: []*myStruct{{value: 1}, {value: 2}},
+	}
+	//baseSlice = []*myStruct{{value: 1}, {value: 2}}
+	/*
+		for i := 0; i < 800; i++ {
+			baseSlice = append(baseSlice, &myStruct{value: i})
+		}
+	*/
+}
+
 func returnSlice() []*myStruct {
-	baseSlice = []*myStruct{{value: 1}, {value: 2}}
 	retSlice := make([]*myStruct, len(baseSlice), len(baseSlice))
 	copy(retSlice, baseSlice)
 	//return append([]*myStruct{}, baseSlice...)
 	return retSlice
 }
 
-func _Test_SliceTrap_ReturnValue(t *testing.T) {
-	slice := returnSlice()
+func returnSliceNoCopy() []*myStruct {
+	return baseStruct.Slice
+}
+
+// 1. slice copy之后返回，下标访问是否会影响原slice
+// 2. slice 作为参数传递，下标访问是否会影响原slice
+func Test_SliceTrap_ReturnValue(t *testing.T) {
+	slice := returnSliceNoCopy()
 	slice[0] = &myStruct{value: 100}
+	//slice[1] = &myStruct{value: 200}
 	slice[1].value = 200
 
 	fmt.Println("------base-------")
-	for _, v := range baseSlice {
+	for _, v := range baseStruct.Slice {
 		fmt.Printf(" %v", v)
 	}
 }
 
-func _Test_SliceTrap_Args(t *testing.T) {
-	baseSlice = []*myStruct{{value: 1}, {value: 2}}
-	modiftySlice(baseSlice)
+func Test_SliceTrap_Args(t *testing.T) {
+	//baseSlice = []*myStruct{{value: 1}, {value: 2}}
+	testSlice := []*myStruct{{value: 1}, {value: 2}}
+	//fmt.Printf("one：%p\n", &baseSlice)
+	//modiftySlice(baseSlice)
+	modiftySlice(testSlice)
 
 	fmt.Println("------base-------")
-	for _, v := range baseSlice {
+	for _, v := range testSlice {
 		fmt.Printf(" %v", v)
 	}
 }
 
-func init() {
-	for i := 0; i < 800; i++ {
-		baseSlice = append(baseSlice, &myStruct{value: i})
+// int  slice作为参数传递, 下标修改数据
+func modiftyIntSlice(s []int) {
+	s[0] = 100
+}
+
+func _Test_SliceTrap_Args2(t *testing.T) {
+	arr := []int{1, 2}
+	dst := make([]int, 2, 2)
+	copy(dst, arr)
+	modiftyIntSlice(dst)
+
+	fmt.Println("------arr-------")
+	for _, v := range arr {
+		fmt.Printf(" %v", v)
 	}
 }
 
-func Benchmark_Copy(b *testing.B) {
+// ------------ benchmark --------------
+func _Benchmark_Copy(b *testing.B) {
 	// 重置计时器
 	b.ResetTimer()
 	// 停止计时器
@@ -112,7 +155,7 @@ func Benchmark_Copy(b *testing.B) {
 	fmt.Println("len(dst): ", len(dst), len(baseSlice))
 }
 
-func Benchmark_Copy2(b *testing.B) {
+func _Benchmark_Copy2(b *testing.B) {
 	// 重置计时器
 	b.ResetTimer()
 	// 停止计时器
