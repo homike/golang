@@ -25,7 +25,7 @@ func _Test_MapWriteRead(t *testing.T) {
 }
 
 // 并发读不会panic
-func Test_MapRead(t *testing.T) {
+func _Test_MapRead(t *testing.T) {
 	c := make(map[string]int)
 	for j := 0; j < 1000000; j++ {
 		c[fmt.Sprintf("%d", j)] = j
@@ -61,4 +61,29 @@ func _Test_Map(t *testing.T) {
 	// 	sync.RWMutex
 	// 	m map[string]int
 	// }{m: make(map[string]int)}
+}
+
+type myStruct1 struct {
+	value int
+	name  string
+}
+
+func modiftyMap(m map[int]myStruct1) {
+	m[0] = myStruct1{value: 100}
+	v, _ := m[1]
+	v.value = 200
+}
+func Test_Map_Args(t *testing.T) {
+	//baseSlice = []*myStruct{{value: 1}, {value: 2}}
+	m := make(map[int]myStruct1)
+	m[0] = myStruct1{value: 1}
+	m[1] = myStruct1{value: 2}
+
+	//fmt.Printf("one：%p\n", &baseSlice)
+	modiftyMap(m)
+
+	fmt.Println("------base-------")
+	for _, v := range m {
+		fmt.Printf(" %v", v)
+	}
 }
