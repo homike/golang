@@ -2,7 +2,6 @@ package methodhandler
 
 import (
 	"fmt"
-	"gotest/gologs/logger"
 	"reflect"
 	"strings"
 )
@@ -35,7 +34,7 @@ func findCall(funcName string) *CallFunc {
 func RegisterCall(funcName string, call interface{}) {
 	funcName = strings.ToLower(funcName)
 	if findCall(funcName) != nil {
-		logger.Error("Call already register")
+		//logger.Error("Call already register")
 		return
 	}
 
@@ -51,7 +50,7 @@ func ExecFunc(funcName string, params []interface{}) (interface{}, interface{}) 
 		strParams := pFunc.FuncParams
 
 		if k.NumIn() != len(params) {
-			logger.Error("func [%s] can not call, func params [%s], params [%v]", funcName, strParams, params)
+			//logger.Error("func [%s] can not call, func params [%s], params [%v]", funcName, strParams, params)
 			return nil, fmt.Errorf("params not enough")
 		}
 
@@ -60,7 +59,7 @@ func ExecFunc(funcName string, params []interface{}) (interface{}, interface{}) 
 			for i, param := range params {
 				v := reflect.ValueOf(param)
 				if v.IsNil() {
-					logger.Error("func [%s] params has nil", funcName)
+					//logger.Error("func [%s] params has nil", funcName)
 					return nil, fmt.Errorf("params has nil")
 				}
 				in[i] = v
@@ -72,7 +71,7 @@ func ExecFunc(funcName string, params []interface{}) (interface{}, interface{}) 
 				return ret[0].Interface(), ret[1].Interface()
 			}
 		} else {
-			logger.Error("func [%s] params at least one", funcName)
+			//logger.Error("func [%s] params at least one", funcName)
 			return nil, fmt.Errorf("params not enough")
 		}
 	}

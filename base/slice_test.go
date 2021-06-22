@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 	"unsafe"
+
+	"github.com/mohae/deepcopy"
 )
 
 // slice 底层结构
@@ -112,5 +114,19 @@ func Benchmark_CopyByAppend(b *testing.B) {
 		dst = append(dst, &S{value: v.value})
 	}
 
+	fmt.Println("len(dst): ", len(dst), len(ss))
+}
+
+func Benchmark_CopyByDeepCopy(b *testing.B) {
+	// 重置计时器
+	b.ResetTimer()
+	// 停止计时器
+	b.StopTimer()
+	//dst := []*myStruct{}
+	// 开始计时器
+	b.StartTimer()
+
+	//dst := make([]*S, 1000, 1000)
+	dst, _ := deepcopy.Copy(ss).([]*S)
 	fmt.Println("len(dst): ", len(dst), len(ss))
 }

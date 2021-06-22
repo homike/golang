@@ -6,13 +6,10 @@ package main
 import (
 	"fmt"
 	syslog "log"
-
 	/*
 		除了common模块, import 其他模块尽量不用 .
 		import . 会导致程序易读性变差
-	*/
-	. "x5/common/errors"
-	/*
+	*//*
 		自动import的文件, 有时候可能是并不是预想中的, 注意检查
 
 		### 项目中出现过, 想引用 game/util 的函数，自动引用了login/util, 出现了BUG的情况 ###
