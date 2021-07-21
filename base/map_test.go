@@ -73,7 +73,7 @@ func modiftyMap(m map[int]myStruct1) {
 	v, _ := m[1]
 	v.value = 200
 }
-func Test_Map_Args(t *testing.T) {
+func _Test_Map_Args(t *testing.T) {
 	//baseSlice = []*myStruct{{value: 1}, {value: 2}}
 	m := make(map[int]myStruct1)
 	m[0] = myStruct1{value: 1}
@@ -86,4 +86,23 @@ func Test_Map_Args(t *testing.T) {
 	for _, v := range m {
 		fmt.Printf(" %v", v)
 	}
+}
+
+func TestMapCopy(t *testing.T) {
+	type mapStruct struct {
+		maps map[int32]int32
+		data int
+	}
+	map1 := &mapStruct{
+		maps: make(map[int32]int32),
+		data: 2,
+	}
+	map1.maps[1] = 1
+	map1.data = 1
+	map2 := &map1
+	map2.maps[2] = 2
+	map2.data = 2
+
+	fmt.Println("map1 ", map1)
+	fmt.Println("map2 ", map2)
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"sync"
 	"testing"
 	"time"
@@ -86,5 +87,5 @@ func _TestXX4(t *testing.T) {
 }
 
 func TestXX5(t *testing.T) {
-
+	fmt.Println("num: ", int32(math.Floor(8/3)), "num2: ", int32(8/3))
 }
