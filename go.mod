@@ -21,6 +21,7 @@ require (
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.0
+	gitlab.papegames.com/daozhang/config v0.1.8
 	go.etcd.io/etcd/client/v3 v3.5.0-alpha.0
 	go.uber.org/atomic v1.7.0
 	golang.org/x/net v0.0.0-20210421230115-4e50805a0758 // indirect
