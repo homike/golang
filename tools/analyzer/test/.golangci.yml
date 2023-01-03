@@ -1,0 +1,6 @@
+linters-settings:
+  custom:
+    example:
+      path: /root/work/x5/ntools/analyzer/gorecover.so
+      description: The description of the linter
+      original-url: github.com/John520/gorouting-with-recover
