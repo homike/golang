@@ -20,15 +20,13 @@ require (
 	github.com/json-iterator/go v1.1.10
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826
 	github.com/pkg/errors v0.9.1
+	github.com/powerman/rpc-codec v1.2.2
 	github.com/stretchr/testify v1.7.0
-	gitlab.papegames.com/daozhang/config v0.1.8
+	gitlab.papegames.com/daozhang/chanrpc v0.1.4
 	go.etcd.io/etcd/client/v3 v3.5.0-alpha.0
-	go.uber.org/atomic v1.7.0
-	golang.org/x/net v0.0.0-20210421230115-4e50805a0758 // indirect
-	golang.org/x/sys v0.0.0-20210421221651-33663a62ff08 // indirect
+	go.uber.org/atomic v1.9.0
 	google.golang.org/grpc v1.32.0
 	gopkg.in/square/go-jose.v2 v2.5.1
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
 replace github.com/golang/protobuf v1.4.2 => github.com/golang/protobuf v1.3.5

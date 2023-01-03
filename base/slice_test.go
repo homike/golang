@@ -1,4 +1,4 @@
-package slice
+package base
 
 import (
 	"fmt"

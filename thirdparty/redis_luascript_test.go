@@ -16,31 +16,23 @@ func TestRedisLuascript(t *testing.T) {
 			if err != nil {
 				return nil, err
 			}
-			//if _, err := c.Do("AUTH", "123456"); err != nil {
-			//c.Close()
-			//return nil, err
-			//}
 			return c, nil
 		},
 	}
 
-	str := fmt.Sprintf(`
-	local key = KEYS[1];
-	local ret = redis.call("ZRANGE",key,0,%v, "WITHSCORES");
-	redis.call("ZREMRANGEBYRANK",key, 0, %v);
-	return ret
-	`, -1, -1)
+	str := fmt.Sprintf(`local key = KEYS[1]; local ret = redis.call("ZRANGE",key,0,%v, "WITHSCORES");return ret`, -1)
+	//str := fmt.Sprintf(`local ret = redis.call("ZRANGE", KEYS[1],0,%v, "WITHSCORES");return ret`, -1)
+	//str := fmt.Sprintf(`local key = KEYS[1];return key`)
 
 	script := redis.NewScript(1, str)
 
 	fmt.Println("Redis Init Success")
 	con := RedisPool.Get()
 
-	ids, err := redis.Int64s(script.Do(con, "userdata:7:test_dbmgr:dirtylist"))
-	if err != redis.ErrNil {
-		fmt.Println("redis get error: ErrNil")
-	} else {
-		fmt.Println("redis get error: ", err)
+	//ids, err := redis.Int64s(script.Do(con, "userdata:7:test_dbmgr:dirtylist"))
+	ret, err := script.Do(con, "10010001")
+	if err != nil {
+		fmt.Println("do script error:", err)
 	}
-	fmt.Println("ids ", ids)
+	fmt.Println("[ids]", ret)
 }
